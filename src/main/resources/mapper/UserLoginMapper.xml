@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sql.UserLoginMapper">
+    <select id="queryAll" resultType="sql.User">
+        select * from users
+    </select>
+
+    <insert id="add" parameterType="sql.User">
+        insert into userLogin values (#{username},#{password})
+    </insert>
+
+    <select id="queryByName" resultType="sql.User">
+        select * from userLogin where username = #{username}
+    </select>
+
+</mapper>

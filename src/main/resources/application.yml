@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://43.136.94.231:3306/dia?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true
+    username: user01
+    password: WWPdsg12
+
