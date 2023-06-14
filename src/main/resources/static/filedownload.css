@@ -1,0 +1,9 @@
+#001{font-size: 30px;color: coral}
+a{align-content: center}
+a{
+    background-color:yellow;
+    /*line-height: 200px;!*垂直居中关键*!*/
+    text-align:center;
+    /*height: 200px;*/
+    /*font-size: 36px;*/
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/html" lang="zh_TW">  
+  <head> 
+    <link rel="stylesheet" type="text/css" href="filedownload.css"/>  
+    <meta http-equiv="content-type" charset="UTF-8"/>  
+    <script type="text/javascript" src="./script/jquery-3.1.0.min.js">2</script>  
+    <script type="text/javascript" src="./register/outfile.js">2</script>
+      <style>
+          #file_table{
+              table-layout: fixed;
+
+          }
+          .filePart {
+              width: 30px;
+              white-space:nowrap;  //   规定段落中的文本不进行换行
+          overflow:hidden;    // 关闭滚动条
+          text-overflow: ellipsis;    // 溢出的文字显示为省略号
+          }
+
+      </style>
+    <title>下載文件</title>
+
+  </head>  
+  <body> 
+    <p> 
+      <a href="/firstweb/register.html" id="001" style="font-size: 30px;color: coral">情況盡快見識</a> 
+    </p>  
+    <form action="/firstweb/uploadfile" method="post" enctype="multipart/form-data"> 
+      <input type="file" name="upload"/>
+        <a href="outFile/a.mobi" download="outFile/a.mobi">here</a>
+      <br/>  
+      <input type="submit" value="上傳"/> 
+    </form>
+    <table id="file_table">
+      <tr>
+<td>
+  file name
+</td>
+        <td>
+          upload
+        </td>
+        <td>
+          size
+        </td>
+      </tr>
+    </table>
+  </body> 
+</html>
