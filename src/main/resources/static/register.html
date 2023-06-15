@@ -1,50 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/html" lang="zh_TW">  
-  <head> 
-    <link rel="stylesheet" type="text/css" href="filedownload.css"/>  
-    <meta http-equiv="content-type" charset="UTF-8"/>  
-    <script type="text/javascript" src="./script/jquery-3.1.0.min.js">2</script>  
-    <script type="text/javascript" src="./register/outfile.js">2</script>
-      <style>
-          #file_table{
-              table-layout: fixed;
+<html lang="zh_CN" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="content-type" charset="UTF-8">
+    <title>註冊賬號</title>
+    <script type="text/javascript" src="script/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="register/registeCheck.js"></script>
 
-          }
-          .filePart {
-              width: 30px;
-              white-space:nowrap;  //   规定段落中的文本不进行换行
-          overflow:hidden;    // 关闭滚动条
-          text-overflow: ellipsis;    // 溢出的文字显示为省略号
-          }
-
-      </style>
-    <title>下載文件</title>
-
-  </head>  
-  <body> 
-    <p> 
-      <a href="/firstweb/register.html" id="001" style="font-size: 30px;color: coral">情況盡快見識</a> 
-    </p>  
-    <form action="spring/uploadfile" method="post" enctype="multipart/form-data">
-      <input type="file" name="upload"/>
-        <a href="outFile/a.mobi" download="outFile/a.mobi">here</a>
-      <br/>  
-      <input type="submit" value="上傳"/> 
-    </form>
-    <table id="file_table">
-      <tr>
-<td>
-  file name
-</td>
-        <td>
-          upload
-        </td>
-        <td>
-          size
-        </td>
-      </tr>
+</head>
+<body>
+<form  method="post">
+    <input type="hidden" name="action" value="login">
+    <table align="center"><tr>
+        <td>用戶名稱:</td>
+        <td><input type="text" value="默認值" name="username"></td>
+    </tr>
+        <tr>
+            <td>密碼:</td>
+            <td><input type="password" value="默認值" maxlength="12" name="password"></td>
+        </tr>
+        <tr>
+            <td>確認密碼:</td>
+            <td><input type="password" value="默認值" maxlength="12" name="repassword" e></td>
+            <td align="center"><input type="button" value="註冊"/></td>
+        </tr>
+        <tr>
+            <td><a href="login.jsp">點這裡登錄</a> </td>
+        </tr>
     </table>
-  </body> 
+</form>
+</body>
 </html>

@@ -1,7 +1,7 @@
 package com.example.springtry2;
 
+import com.sql.FileSql;
 import jakarta.annotation.PreDestroy;
-import jakarta.websocket.OnClose;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-
-import com.sql.FileSql;
 
 @RestController
 @RequestMapping("")
@@ -47,7 +45,7 @@ public class anotherTest {
         }
         return "上传失败！";
     }
-    @GetMapping("file-list")
+    @GetMapping("get-file")
     public String getFileLilt()
     {
         return fileSql.get_fileList().toString();

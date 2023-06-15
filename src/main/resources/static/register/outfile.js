@@ -1,9 +1,9 @@
 let files;
 $(function () {
     let a=$("#001");
-
+    a.href=window.location.href.replace(/\/[^\/]+$/, '/')+"file.html";
     a.text("如有亂碼請點擊此處刷新")
-    $.get("/firstweb/get-file","",function (dat,sta) {
+    $.get(window.location.href.replace(/\/[^\/]+$/, '/')+"get-file","",function (dat,sta) {
         files=$.parseJSON(dat);
         for (let i=0;i<files.length;i++)
         {

@@ -27,8 +27,8 @@ $(function () {
     })
     //check if the username had been registed
     usena.blur(function () {
-        $.post("/firstweb/checkp",$("form[method='post']").serialize(),function (data) {
-            if(data!=="用戶不存在,請先註冊"){alert("該用戶名已被註冊")}
+        $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"checkp",$("form[method='post']").serialize(),function (data) {
+            if(data!==-1){alert("該用戶名已被註冊")}
         })
     })
     //submit the register form
@@ -42,7 +42,7 @@ $(function () {
     })
 })
 function register() {
-    $.post("/firstweb/text3",$("form[method='post']").serialize(),function (data) {
+    $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"text3",$("form[method='post']").serialize(),function (data) {
         alert(data);
     })
 
