@@ -5,8 +5,8 @@
   <head> 
     <link rel="stylesheet" type="text/css" href="filedownload.css"/>  
     <meta http-equiv="content-type" charset="UTF-8"/>  
-    <script type="text/javascript" src="./script/jquery-3.1.0.min.js">2</script>  
-    <script type="text/javascript" src="register/outfile.js">2</script>
+    <script type="text/javascript" src="./script/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="register/outfile.js"></script>
       <style>
           #file_table{
               table-layout: fixed;
@@ -25,15 +25,24 @@
   </head>  
   <body> 
     <p> 
-      <a href="/firstweb/register.html" id="001" style="font-size: 30px;color: coral">情況盡快見識</a> 
+      <a href="/spring/file.html" id="001" style="font-size: 30px;color: coral">情況盡快見識</a>
     </p>  
-    <form action="spring/uploadfile" method="post" enctype="multipart/form-data">
+    <form action=" ${window.location.href.replace(/\/[^\/]+$/, '/')} uploadfile" method="post" enctype="multipart/form-data" id="upload_form">
       <input type="file" name="upload"/>
-        <a href="outFile/a.mobi" download="outFile/a.mobi">here</a>
-      <br/>  
-      <input type="submit" value="上傳"/> 
+      <br/>
+        <input type="text" name="dir" id="dir" value="0" style="display: none">
+        <input type="text" name="path" id="path" value="" style="display: none">
+      <input type="submit" value="上傳"/>
     </form>
     <table id="file_table">
+        <tr>
+            <td >
+                <input type="button" id="add-dir" value="addDir" />
+            </td>
+            <td>
+                <input type="text" id="dir-name">
+            </td>
+        </tr>
       <tr>
 <td>
   file name
@@ -45,6 +54,11 @@
           size
         </td>
       </tr>
+        <tr>
+            <td>
+                <a href="javascript:void(0)" onclick="dirback()">../</a>
+            </td>
+        </tr>
     </table>
   </body> 
 </html>

@@ -1,6 +1,5 @@
-package com.example.springtry2;
+package com;
 
-import com.SpringTry2Application;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 

@@ -1,7 +1,7 @@
 package com.filter;
 
 
-import com.example.springtry2.anotherTest;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @WebFilter(filterName = "main",urlPatterns = "/*")
 public class SetCharacterEncodingFilter implements Filter {
-	public static final Logger logger = LogManager.getLogger(anotherTest.class);
+	public static final Logger logger = LogManager.getLogger("main");
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub

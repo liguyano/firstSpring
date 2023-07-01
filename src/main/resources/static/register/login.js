@@ -7,7 +7,7 @@ $(function () {
             if (data>0){
                 $("#gobyh").show();
                 alert("密码正确");
-                top.location="filefile.html"
+                top.location="file.html"
             }else if (data===-2)
             {
                 alert("密码错误");

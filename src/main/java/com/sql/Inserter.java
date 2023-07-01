@@ -16,13 +16,11 @@ public class Inserter {
     static final String USER = "user01";
     static final String PASS = "WWPdsg12";
     private Connection conn = null;
-    private Statement stmt = null;
     private String rightpassw=null;
     private boolean stmt_closed=true;
     public void close()
     {
         try {
-            stmt.close();
             conn.close();
             stmt_closed=true;
         } catch (SQLException e) {
@@ -30,19 +28,7 @@ public class Inserter {
         }
 
     }
-    public void closeQueue()
-    {    try {
-        if (stmt_closed)
-        {}
-        else
-        {
-        stmt.close();
-        stmt_closed=true;
-        }
-    } catch (SQLException e) {
 
-    }
-    }
     public Inserter() {
         try {
              Class.forName(JDBC_DRIVER);
@@ -59,16 +45,16 @@ public class Inserter {
     }
     public void insert(String sql)
     {
+        Statement stmt = null;
         /**
          * When don't need the return value ,use this.
          * */
         try {
-            if (stmt_closed)
-            {
-                stmt = conn.createStatement();
-                stmt_closed=false;
-            }
+
+            stmt = conn.createStatement();
+            stmt_closed=false;
             stmt.execute(sql);
+            stmt.close();
         } catch (SQLException e) {
             this.close();
             logger.error("run" +sql +"failed");
@@ -82,6 +68,7 @@ public class Inserter {
             }
             throw new RuntimeException(e);
         }
+
     }
     public ArrayList<String> select(String sql,String ... col )
     {
@@ -92,11 +79,9 @@ public class Inserter {
          * */
         ArrayList<String> result=new ArrayList<>();
         try {
-            if (stmt_closed)
-            {
-                stmt = conn.createStatement();
-                stmt_closed=false;
-            }
+            Statement stmt = null;
+            stmt = conn.createStatement();
+
             ResultSet rs=stmt.executeQuery(sql);
             while (rs.next())
             {
@@ -105,18 +90,13 @@ public class Inserter {
                     result.add(rs.getString(s));
                 }
             }
+            stmt.close();
             return result;
         } catch (SQLException e) {
             this.close();
             logger.error("run" +sql +"failed");
             logger.error(e);
             logger.info("try reconnected");
-            try {
-                conn = DriverManager.getConnection(DB_URL,USER,PASS);
-                stmt = conn.createStatement();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
             throw new RuntimeException(e);
         }
 

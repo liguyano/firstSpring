@@ -24,6 +24,7 @@ public class Sql_Father {
         for (int i =0;i<re.size();i+=sizeCol)
         {
             JSONObject jo=new JSONObject();
+            System.out.println(re.get(i));
             for (int j=0;j<sizeCol;j++)
             {
                 jo.put(col[j],re.get(i+j) );

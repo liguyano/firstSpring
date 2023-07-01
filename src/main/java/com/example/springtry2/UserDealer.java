@@ -22,7 +22,7 @@ public int checkPassWord(HttpServletRequest request, @RequestParam("username") S
     int a=accountSql.checkPass(username,password);
     if (a>0)
     {
-        request.getSession().setAttribute("user",username);
+        request.getSession().setAttribute("user",a);
     }
     return a;
 }
