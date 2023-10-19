@@ -2,6 +2,7 @@ package com.example.springtry2;
 
 import com.sql.FileSql;
 import jakarta.annotation.PreDestroy;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,18 +43,29 @@ public class anotherTest {
         String currentDir = System.getProperty("user.dir");
         log.info(path);
         log.info(dir);
-        log.info("当前目录是：" + currentDir);
+        log.debug("当前目录是：" + currentDir);
         log.info("file Come");
         if (file.isEmpty()) {
             return "上传失败，请选择文件";
         }
         String fileName = file.getOriginalFilename();
-        fileName = fileSql.checkName(fileName);
+        fileName = fileSql.checkName(fileName,dir);
+        int userid=0;
+        Cookie[]cookies=request.getCookies();
+        String cookieValue=null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("user")) {
+                    cookieValue = cookie.getValue();
+                    userid=Integer.parseInt(cookieValue);
+                }
+            }
+        }
         try {
-            fileSql.add_File(path+fileName, file.getSize(), (int) request.getSession().getAttribute("user"),dir);
-            fileName = fileSql.getIdByName(path+fileName);
+            fileSql.add_File(fileName, file.getSize(), userid,dir);
+            fileName = fileSql.getIdByName(fileName);
             log.info(path+fileName);
-            File dest = new File(filePath +path+"/"+ fileName);
+            File dest = new File(filePath +"/"+ fileName);
             file.transferTo(dest);
             return "上传成功";
         } catch (IOException e) {
@@ -76,12 +88,8 @@ public class anotherTest {
     public int add_file(@RequestParam("dir-name") String dir,@RequestParam("pre") int pre
     ,@RequestParam("path") String path
     ) {
-        int re=fileSql.createFolderIfNotExists(filePath +path+ dir);
-        if (re==1)
-        {
-            fileSql.add_dir(dir,pre);
-        }
-        return re;
+        fileSql.add_dir(dir,pre);
+        return 1;
     }
 
     @GetMapping("dir")

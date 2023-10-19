@@ -124,8 +124,10 @@ function get_dir() {
 
         }).fail()
     })
+        document.cookie="pathStrs="+pathStrs.toString()
+        document.cookie="paths="+paths.toString();
 }
-function into_dir(dir,name) {
+function into_dir(dir ,name) {
     pathNow=dir
     pathstr=name
     pathStrs.push(name)
@@ -135,7 +137,37 @@ function into_dir(dir,name) {
     get_dir()
 }
 $(function () {
+    var cookies = document.cookie.split('; ');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].split('=');
+        console.log(cookie[0])
+        if (cookie[0] === "paths") {
+            var cookieValue = cookie[1];
+            paths=cookieValue.split(",")
+            pathNow=paths[paths.length-1]
+            console.log(paths)
+            // Do something with the cookie value
+        }
+        if (cookie[0] === "pathStrs") {
+            var cookieValue = cookie[1];
+            pathStrs=cookieValue.split(",")
+            console.log(pathStrs)
+            pathstr=pathStrs[pathStrs.length-1];
+            // Do something with the cookie value
+        }
+    }
+    $("#dir").val(pathNow);
+    $("#path").val(toS(pathStrs))
+    let str = window.location.href;
+    let result = str.replace(/\/[^\/]+$/, '/');
+    if (document.cookie.includes("user"))
+    {
 
+    }else
+    {
+        alert("請先登錄")
+        window.location.href =result+"index.html";
+    }
     get_dir()
     let a=$("#001");
     $("#add-dir").click(function () {

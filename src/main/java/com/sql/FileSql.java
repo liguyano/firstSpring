@@ -51,14 +51,13 @@ public class FileSql extends Sql_Father {
     {
         String sql="SELECT id FROM file WHERE FILENAME=\"%s\" ;";
         sql=String.format(sql,fileName);
-
         return inserter.select(sql,"id").get(0);
     }
-    public String checkName(String fileName)
+    public String checkName(String fileName ,int dir)
     {
         ArrayList<String> rs;
-        String sql ="select * from file where FILENAME='%s'";
-        sql=String.format(sql,fileName);
+        String sql ="select * from file where FILENAME='%s' AND dir='%d';";
+        sql=String.format(sql,fileName,dir);
         String nf=fileName;
         rs=inserter.select(sql,"id");
         int i=0;

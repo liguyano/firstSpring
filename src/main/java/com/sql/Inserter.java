@@ -61,6 +61,7 @@ public class Inserter {
             logger.error(e);
             logger.info("try reconnected");
             try {
+                conn.close();
                 conn = DriverManager.getConnection(DB_URL,USER,PASS);
                 stmt = conn.createStatement();
             } catch (SQLException ex) {
@@ -93,7 +94,13 @@ public class Inserter {
             stmt.close();
             return result;
         } catch (SQLException e) {
-            this.close();
+            try {
+                conn.close();
+                conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
             logger.error("run" +sql +"failed");
             logger.error(e);
             logger.info("try reconnected");
