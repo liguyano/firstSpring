@@ -98,11 +98,16 @@ function downloadAll(dirId) {
         let fileP=$("#file-temp-area");
         for (let i=0;i<files.length;i++)
         {
-            fileP.append("<a class='all-flie' style='visibility: hidden' href=\"outFile/"+files[i].id+"\" download='" +files[i].FILENAME+
+            fileP.append("<a class='all-file' style='visibility: hidden' href=\"outFile/"+files[i].id+"\" download='" +files[i].FILENAME+
         "'>" +files[i].FILENAME+
         "</a>"
             );
         }
+        let allF=document.getElementsByClassName("all-file");
+        for (const allFElement of allF) {
+            allFElement.click();
+        }
+        fileP.empty()
 
     })
 }
@@ -129,6 +134,8 @@ function get_dir() {
     if (pathNow != 0){
         $("#file_table").append(" " +
             "<tr><td> now in:/" +pathStrs[0]+"/"+toS(pathStrs)+
+            "</td> <td> <input type='button' value='download all' onclick='downloadAll(" +pathNow+
+            ")'> " +
             "</td></tr>" +
             "<tr>" +
             "            <td>" +
@@ -142,7 +149,8 @@ function get_dir() {
         for (let i = 0; i < fil.length; i++) {
             $("#file_table").append('<tr> <td> <a href="javascript:void(0)" onclick="into_dir('+fil[i].id+',\''+fil[i].name+'\')">'+fil[i].name+'</a></td> '+
                 "<td>"+"<input type='button' class='del-dir-btn' value='delete' onclick=\'deleteDir("+fil[i].id
-            +")\'>"+"</td>" +"</tr>")
+            +")\'>"+"</td>"+"<td>" +"<input type='button' value='download all' onclick='downloadAll("+fil[i].id+")'> "+
+                "</td>" +"</tr>")
         }$.get(window.location.href.replace(/\/[^\/]+$/, '/')+"get-file","dir="+pathNow,function (dat,sta) {
             files=$.parseJSON(dat);
             for (let i=0;i<files.length;i++)
