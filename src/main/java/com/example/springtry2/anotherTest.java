@@ -23,7 +23,7 @@ public class anotherTest {
     @Autowired
     private final FileSql fileSql;
     @Value("${filePath}")
-    private String filePath = "/home/ubuntu/apache-tomcat-10.1.10/webapps/spring/outFile/";
+    private String filePath =" E:/apache-tomcat-10.1.10/webapps/spring/outFile";
 
     public anotherTest(FileSql fileSql) {
         log.info("file path" + filePath);
@@ -39,9 +39,8 @@ public class anotherTest {
     @PostMapping("uploadfile")
     @ResponseBody
     public String uploadFile(HttpServletRequest request, @RequestParam("upload") MultipartFile file,@RequestParam("dir" )int dir
-   , @RequestParam("path") String path) {
+   ) {
         String currentDir = System.getProperty("user.dir");
-        log.info(path);
         log.info(dir);
         log.debug("当前目录是：" + currentDir);
         log.info("file Come");
@@ -64,7 +63,6 @@ public class anotherTest {
         try {
             fileSql.add_File(fileName, file.getSize(), userid,dir);
             fileName = fileSql.getIdByName(fileName);
-            log.info(path+fileName);
             File dest = new File(filePath +"/"+ fileName);
             file.transferTo(dest);
             return "上传成功";
@@ -86,7 +84,7 @@ public class anotherTest {
     }
     @PostMapping("add-dir")
     public int add_file(@RequestParam("dir-name") String dir,@RequestParam("pre") int pre
-    ,@RequestParam("path") String path
+
     ) {
         fileSql.add_dir(dir,pre);
         return 1;
@@ -95,6 +93,36 @@ public class anotherTest {
     @GetMapping("dir")
     public String get_dir(@RequestParam("pre") int p){
         return fileSql.get_dirs(p).toString();
+    }
+
+    @PostMapping("del-file")
+    public String del_file(@RequestParam("id") int fileId,@RequestParam("password") String password)
+    {
+        if (fileSql.checkPass("root",password)>0)
+        {
+
+        }else
+        {
+            return "password wrong";
+        }
+        fileSql.delete_file(fileId);
+        if (deleteFile(filePath+"/"+String.valueOf(fileId)))
+        {
+            log.info("ok");
+            return "ok";
+        }
+        log.info("file");
+        return "fail";
+    }
+    public  boolean deleteFile(String filePath) {
+        File file = new File(filePath);
+        // Check if file exists before deleting it.
+        if (file.exists()) {
+            return file.delete();
+        } else {
+            log.info(filePath + "not exit");
+            return false;
+        }
     }
 }
 

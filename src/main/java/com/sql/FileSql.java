@@ -118,4 +118,30 @@ public class FileSql extends Sql_Father {
                 pre+
                 ");");
     }
+    public void delete_file(int fileId)
+    {
+        String sql=String.format("DELETE FROM file WHERE id =%d ;",fileId);
+        inserter.insert(sql);
+    }
+    public  int checkPass(String username,String password) {
+        String sql;
+//            sql = "insert into user(user,password) values(\"%s\",\"%s\")";
+//            sql=String.format(sql,username,password);
+        sql= "select * from users where name=\"%s\"";
+        sql=String.format(sql,username);
+        ArrayList<String> pass=inserter.select(sql,"password","id");
+        if (pass.size()<1)
+        {
+            return -1;//not exeist
+        }else
+        {
+            if (pass.get(0).equals(password))
+            {
+                return Integer.parseInt(pass.get(1));
+            }else
+            {
+                return -2;
+            }
+        }
+    }
 }

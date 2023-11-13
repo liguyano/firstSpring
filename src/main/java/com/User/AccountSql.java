@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class AccountSql extends Sql_Father {
     public void submit(String username,String password) {
-        String sql = "insert into users(name,password) values(\"%s\",\"%s\")";
+        String sql = "insert into users(name,password,data) values(\"%s\",\"%s\",CURDATE())";
         sql=String.format(sql,username,password);
         inserter.insert(sql);
     }
@@ -14,6 +14,7 @@ public class AccountSql extends Sql_Father {
         String sql;
 //            sql = "insert into user(user,password) values(\"%s\",\"%s\")";
 //            sql=String.format(sql,username,password);
+
         sql= "select * from users where name=\"%s\"";
         sql=String.format(sql,username);
         ArrayList<String> pass=inserter.select(sql,"password","id");

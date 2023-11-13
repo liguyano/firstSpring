@@ -3,7 +3,6 @@ let pathNow=0
 let pathstr=""
 let pathStrs=[pathstr]
 let paths=[pathNow]
-let fil
 function PathBeforeLastSlash(url) {
     // 使用正则表达式匹配最后一个斜杠之前的内容
     var pattern = /^(.*\/)/;
@@ -38,8 +37,7 @@ function add_dir() {
     {
         return;
     }
-    $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"add-dir","dir-name="+$("#dir-name").val()+'&pre='+pathNow+
-        "&path="+toS(pathStrs),function (dat) {
+    $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"add-dir","dir-name="+$("#dir-name").val()+'&pre='+pathNow,function (dat) {
         alert(fileMess[dat-1])
         if (pathNow>0)
         {
@@ -75,6 +73,14 @@ function toS(dat) {
     }
     console.log(a)
     return a
+}
+function delFile(fileName){
+    let rootPass=prompt("please input the root password ")
+    $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"del-file","id="+fileName+"&password="+rootPass,
+        function (dat) {
+        alert(dat)
+        }
+    )
 }
 function get_dir() {
     $("#file_table").html("  <tr>\n" +
@@ -119,13 +125,13 @@ function get_dir() {
                     "'>" +files[i].FILENAME+
                     "</a></td>"+"<td>"+files[i].UPLOADTIME+"</td>"+
                     "<td>"+files[i].size+"</td>"+
+                    "<td>"+"<input type='button' value='delete' class='del-btn' onclick='delFile("+files[i].id+")'>"+"</td>"+
                     "</tr>");
             }
 
         }).fail()
     })
-        document.cookie="pathStrs="+pathStrs.toString()
-        document.cookie="paths="+paths.toString();
+    document.cookie="paths="+paths.toString();
 }
 function into_dir(dir ,name) {
     pathNow=dir
@@ -146,13 +152,6 @@ $(function () {
             paths=cookieValue.split(",")
             pathNow=paths[paths.length-1]
             console.log(paths)
-            // Do something with the cookie value
-        }
-        if (cookie[0] === "pathStrs") {
-            var cookieValue = cookie[1];
-            pathStrs=cookieValue.split(",")
-            console.log(pathStrs)
-            pathstr=pathStrs[pathStrs.length-1];
             // Do something with the cookie value
         }
     }

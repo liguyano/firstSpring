@@ -11,9 +11,10 @@ import java.util.ArrayList;
 public class Inserter {
     static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     public static final Logger logger = LogManager.getLogger(Inserter.class);
-    static final String DB_URL = "jdbc:mysql://43.136.94.231:3306/dia?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true";
+    //static final String DB_URL = "jdbc:mysql://43.136.94.231:3306/dia?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true";
+    static final String DB_URL = "jdbc:mysql://localhost:3306/dia?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&autoReconnect=true";
     // 数据库的用户名与密码，需要根据自己的设置
-    static final String USER = "user01";
+    static final String USER = "root";
     static final String PASS = "WWPdsg12";
     private Connection conn = null;
     private String rightpassw=null;
