@@ -107,9 +107,14 @@ public class FileSql extends Sql_Father {
     {
         return inserter.select("select name from Dir where id ="+dir,"name").get(0);
     }
-    public String get_id_by_dir(String id)
+    public String get_id_by_dir(String dirName)
     {
-        return inserter.select("select id from Dir where name =\""+id+"\"","id").get(0);
+        return inserter.select("select id from Dir where name =\""+ dirName +"\"","id").get(0);
+    }
+    public boolean isDuplicate(String name,int pre)
+    {
+        ArrayList<String> result=inserter.select(String.format("select id from Dir where name=\"%s\" and pre=%d;",name,pre),"id");
+        return !result.isEmpty();
     }
     public void add_dir(String name,int pre)
     {
@@ -122,6 +127,10 @@ public class FileSql extends Sql_Father {
     {
         String sql=String.format("DELETE FROM file WHERE id =%d ;",fileId);
         inserter.insert(sql);
+    }
+    public void delete_dir(int dirId)
+    {
+        inserter.insert(String.format("delete from dir where id=%d;",dirId));
     }
     public  int checkPass(String username,String password) {
         String sql;

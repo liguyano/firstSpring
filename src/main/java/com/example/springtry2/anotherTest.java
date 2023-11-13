@@ -1,5 +1,7 @@
 package com.example.springtry2;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sql.FileSql;
 import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.Cookie;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @RestController
 @Component
@@ -86,6 +89,10 @@ public class anotherTest {
     public int add_file(@RequestParam("dir-name") String dir,@RequestParam("pre") int pre
 
     ) {
+        if (fileSql.isDuplicate(dir,pre))
+        {
+            return -1;
+        }
         fileSql.add_dir(dir,pre);
         return 1;
     }
@@ -94,7 +101,38 @@ public class anotherTest {
     public String get_dir(@RequestParam("pre") int p){
         return fileSql.get_dirs(p).toString();
     }
+    @PostMapping("del-dir")
+    public String del_dir(@RequestParam("dirId") int dirid ,@RequestParam("password") String password)
+    {
+        if (fileSql.checkPass("root",password)>0)
+    {
 
+    }else
+    {
+        return "password wrong";
+    }
+        ArrayList<Integer> allDir =new ArrayList<>();
+        while (true)
+        {
+            JSONArray dirs=fileSql.get_dirs(dirid);
+            JSONArray files=fileSql.get_fileList(dirid);
+            for (int i = 0; i <files.size() ; i++) {
+                deleteFile(filePath+"/"+files.getJSONObject(i).getString("id"));
+            }
+            for (int i = 0; i < dirs.size(); i++) {
+                JSONObject jo=dirs.getJSONObject(i);
+                allDir.add(jo.getInteger("id"));
+            }
+            fileSql.delete_dir(dirid);
+            if (allDir.isEmpty())
+            {
+                break;
+            }
+            dirid=allDir.get(allDir.size()-1);
+            allDir.remove(allDir.size()-1);
+        }
+        return "ok";
+    }
     @PostMapping("del-file")
     public String del_file(@RequestParam("id") int fileId,@RequestParam("password") String password)
     {

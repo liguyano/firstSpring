@@ -82,6 +82,30 @@ function delFile(fileName){
         }
     )
 }
+function deleteDir(dirid) {
+    let rootPass=prompt("please input the root password ")
+    $.post(window.location.href.replace(/\/[^\/]+$/, '/')+"del-dir","dirId="+dirid+"&password="+rootPass,
+        function (dat) {
+            alert(dat);
+        }
+    ).fail(function () {
+        alert("fail");
+    })
+}
+function downloadAll(dirId) {
+    $.get(window.location.href.replace(/\/[^\/]+$/, '/')+"get-file","dir="+dirId,function (dat,sta) {
+        files=$.parseJSON(dat);
+        let fileP=$("#file-temp-area");
+        for (let i=0;i<files.length;i++)
+        {
+            fileP.append("<a class='all-flie' style='visibility: hidden' href=\"outFile/"+files[i].id+"\" download='" +files[i].FILENAME+
+        "'>" +files[i].FILENAME+
+        "</a>"
+            );
+        }
+
+    })
+}
 function get_dir() {
     $("#file_table").html("  <tr>\n" +
         "            <td >\n" +
@@ -103,25 +127,30 @@ function get_dir() {
         "        </td>\n" +
         "      </tr>")
     if (pathNow != 0){
-        $("#file_table").append(" <tr>\n" +
-            "            <td>\n" +
-            "                <a href=\"javascript:void(0)\" onclick=\"dirback()\">../</a>\n" +
-            "            </td>\n" +
+        $("#file_table").append(" " +
+            "<tr><td> now in:/" +pathStrs[0]+"/"+toS(pathStrs)+
+            "</td></tr>" +
+            "<tr>" +
+            "            <td>" +
+            "                <a href=\"javascript:void(0)\" onclick=\"dirback()\">../</a>" +
+            "            </td>" +
+
             "        </tr>")
     }
     $.get(window.location.href.replace(/\/[^\/]+$/, '/')+'dir','pre='+pathNow ,function (dat) {
     fil=$.parseJSON(dat)
         for (let i = 0; i < fil.length; i++) {
-            $("#file_table").append('<tr> <td> <a href="javascript:void(0)" onclick="into_dir('+fil[i].id+',\''+fil[i].name+'\')">'+fil[i].name+'</a></td> </tr>')
-
+            $("#file_table").append('<tr> <td> <a href="javascript:void(0)" onclick="into_dir('+fil[i].id+',\''+fil[i].name+'\')">'+fil[i].name+'</a></td> '+
+                "<td>"+"<input type='button' class='del-dir-btn' value='delete' onclick=\'deleteDir("+fil[i].id
+            +")\'>"+"</td>" +"</tr>")
         }$.get(window.location.href.replace(/\/[^\/]+$/, '/')+"get-file","dir="+pathNow,function (dat,sta) {
             files=$.parseJSON(dat);
             for (let i=0;i<files.length;i++)
             {
-                let tempName=PathBeforeLastSlash(files[i].FILENAME)
+
                 files[i].FILENAME=extractLastPathComponent(files[i].FILENAME);
                 let fileTable=$("#file_table");
-                fileTable.append("<tr >" +"<td class='filePart' ><a href=\"outFile/"+tempName+files[i].id+"\" download='" +files[i].FILENAME+
+                fileTable.append("<tr >" +"<td class='filePart' ><a href=\"outFile/"+files[i].id+"\" download='" +files[i].FILENAME+
                     "'>" +files[i].FILENAME+
                     "</a></td>"+"<td>"+files[i].UPLOADTIME+"</td>"+
                     "<td>"+files[i].size+"</td>"+
@@ -132,6 +161,7 @@ function get_dir() {
         }).fail()
     })
     document.cookie="paths="+paths.toString();
+    document.cookie="pathStrs="+pathStrs.toString();
 }
 function into_dir(dir ,name) {
     pathNow=dir
@@ -152,6 +182,13 @@ $(function () {
             paths=cookieValue.split(",")
             pathNow=paths[paths.length-1]
             console.log(paths)
+            // Do something with the cookie value
+        }
+        if (cookie[0] === "pathStrs") {
+            var cookieValue = cookie[1];
+            pathStrs=cookieValue.split(",")
+            pathstr=pathStrs[paths.length-1]
+            console.log(pathstr)
             // Do something with the cookie value
         }
     }
