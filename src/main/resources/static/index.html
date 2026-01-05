@@ -1,33 +1,192 @@
-
-<html xmlns="http://www.w3.org/1999/html" lang="zh_CN">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
     <script type="text/javascript" src="./script/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="./register/login.js"></script>
-    <title>登錄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .register-link {
+            text-align: center;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        #gobyh {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        #gobyh a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-<span style="align-content: center">歡迎登錄</span>
-<form id="loginform">
-    <input type="hidden" action="login"/>
-    <table align="center">
-        <tr>
-            <td>用戶名</td>
-            <td><input type="text" name="username"/> </td>
-        </tr>
-        <tr>
-            <td>密碼</td>
-            <td><input type="password" name="password"> </td>
-        </tr>
-        <tr>
-            <td><input type="button" value="登錄"/></td>
-            <td><a id="a_register" href="../register.html">沒有賬號，點這裡註冊</a> </td>
-        </tr>
-        <tr>
-            <td id="gobyh" hidden="hidden"><a id="a_file" href="../register.html">如未自動跳轉，點此手動跳轉</a></td>
-        </tr>
-    </table>
-</form>
-
+    <div class="login-container">
+        <div class="login-header">
+            <h1>欢迎登录</h1>
+            <p>请输入您的账号信息</p>
+        </div>
+        <form id="loginform">
+            <input type="hidden" action="login"/>
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required/>
+            </div>
+            <input type="button" class="btn-login" id="loginBtn" value="登录"/>
+            <div class="register-link">
+                <a id="a_register" href="../register.html">没有账号，点击这里注册</a>
+            </div>
+            <div id="gobyh" hidden="hidden">
+                <a id="a_file" href="../register.html">如未自动跳转，点击此处手动跳转</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,32 +1,177 @@
-
-<html lang="zh_CN" xmlns="http://www.w3.org/1999/html">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="content-type" charset="UTF-8">
-    <title>註冊賬號</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册账号</title>
     <script type="text/javascript" src="script/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="register/registeCheck.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.1);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #f5576c;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #f093fb;
+            text-decoration: underline;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .password-strength.weak {
+            color: #ff4757;
+        }
+
+        .password-strength.medium {
+            color: #ffa502;
+        }
+
+        .password-strength.strong {
+            color: #2ed573;
+        }
+    </style>
 </head>
 <body>
-<form  method="post">
-    <input type="hidden" name="action" value="login">
-    <table align="center"><tr>
-        <td>用戶名稱:</td>
-        <td><input type="text" value="默認值" name="username"></td>
-    </tr>
-        <tr>
-            <td>密碼:</td>
-            <td><input type="password" value="默認值" maxlength="12" name="password"></td>
-        </tr>
-        <tr>
-            <td>確認密碼:</td>
-            <td><input type="password" value="默認值" maxlength="12" name="repassword" e></td>
-            <td align="center"><input type="button" value="註冊"/></td>
-        </tr>
-        <tr>
-            <td><a href="../">點這裡登錄</a> </td>
-        </tr>
-    </table>
-</form>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>注册账号</h1>
+            <p>创建一个新账户</p>
+        </div>
+        <form method="post" id="registerForm">
+            <input type="hidden" name="action" value="login">
+            <div class="form-group">
+                <label for="username">用户名称</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" maxlength="12" placeholder="请输入密码（最多12位）" required/>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+            <div class="form-group">
+                <label for="repassword">确认密码</label>
+                <input type="password" id="repassword" name="repassword" maxlength="12" placeholder="请再次输入密码" required/>
+            </div>
+            <input type="button" class="btn-register" id="registerBtn" value="注册"/>
+            <div class="login-link">
+                <a href="../">已有账号，点击这里登录</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,67 +1,438 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/html" lang="zh_TW">  
-  <head> 
-    <link rel="stylesheet" type="text/css" href="filedownload.css"/>  
-    <meta http-equiv="content-type" charset="UTF-8"/>  
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="filedownload.css"/>
     <script type="text/javascript" src="./script/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="register/outfile.js"></script>
-      <style>
-          #file_table{
-              table-layout: fixed;
+    <title>文件管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-          }
-          .filePart {
-              width: 30px;
-              white-space:nowrap;  //   规定段落中的文本不进行换行
-          overflow:hidden;    // 关闭滚动条
-          text-overflow: ellipsis;    // 溢出的文字显示为省略号
-          }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-      </style>
-    <title>下載文件</title>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  </head>  
-  <body> 
-    <p> 
-      <a href="/spring/file.html" id="001" style="font-size: 30px;color: coral">情況盡快見識</a>
-    </p>  
-    <form action=" ${window.location.href.replace(/\/[^\/]+$/, '/')} uploadfile" method="post" enctype="multipart/form-data" id="upload_form">
-      <input type="file" name="upload"/>
-      <br/>
-        <input type="text" name="dir" id="dir" value="0" style="display: none">
-        <input type="text" name="path" id="path" value="" style="display: none">
-      <input type="submit" value="上傳"/>
-    </form>
-    <p id = "file-temp-area" hidden="hidden">
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-    </p>
-    <table id="file_table">
-        <tr>
-            <td >
-                <input type="button" id="add-dir" value="addDir" />
-            </td>
-            <td>
-                <input type="text" id="dir-name">
-            </td>
-        </tr>
-      <tr>
-<td>
-  file name
-</td>
-        <td>
-          upload
-        </td>
-        <td>
-          size
-        </td>
-      </tr>
-        <tr>
-            <td>
-                <a href="javascript:void(0)" onclick="dirback()">../</a>
-            </td>
-        </tr>
-    </table>
-  </body> 
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-section h2 {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            border: 2px dashed #8ec5fc;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .file-input-text svg {
+            width: 48px;
+            height: 48px;
+            fill: #8ec5fc;
+            margin-bottom: 10px;
+        }
+
+        .btn-upload {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .file-manager {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-manager-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .file-manager-header h2 {
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #764ba2;
+        }
+
+        .breadcrumb span {
+            color: #999;
+        }
+
+        .create-folder {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .create-folder input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .create-folder input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-create-folder {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-create-folder:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        #file_table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #file_table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        #file_table th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        #file_table th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        #file_table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            font-size: 14px;
+        }
+
+        #file_table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-name svg {
+            width: 20px;
+            height: 20px;
+            fill: #667eea;
+        }
+
+        .file-name a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            display: inline-block;
+        }
+
+        .file-name a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .file-date {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-download:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-delete {
+            background: #ffe0e0;
+            color: #ff4757;
+        }
+
+        .btn-delete:hover {
+            background: #ffd0d0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header,
+            .upload-section,
+            .file-manager {
+                padding: 20px;
+            }
+
+            .file-manager-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .create-folder {
+                width: 100%;
+            }
+
+            .create-folder input {
+                flex: 1;
+            }
+
+            #file_table th,
+            #file_table td {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .file-name a {
+                max-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📁 文件管理中心</h1>
+            <p>上传、下载和管理您的文件</p>
+        </div>
+
+        <div class="upload-section">
+            <h2>上传文件</h2>
+            <form action="${window.location.href.replace(/\/[^\/]+$/, '/')}uploadfile" method="post" enctype="multipart/form-data" id="upload_form" class="upload-form">
+                <input type="text" name="dir" id="dir" value="0" style="display: none">
+                <input type="text" name="path" id="path" value="" style="display: none">
+                <div class="file-input-wrapper">
+                    <input type="file" name="upload" id="fileInput"/>
+                    <div class="file-input-text">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                        </svg>
+                        <div id="fileName">点击或拖拽文件到此处上传</div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-upload">上传文件</button>
+            </form>
+        </div>
+
+        <div class="file-manager">
+            <div class="file-manager-header">
+                <h2>文件列表</h2>
+                <div class="breadcrumb">
+                    <a href="javascript:void(0)" onclick="dirback()">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                        返回上级
+                    </a>
+                    <span>/</span>
+                    <span id="currentPath">根目录</span>
+                </div>
+                <div class="create-folder">
+                    <input type="text" id="dir-name" placeholder="新文件夹名称"/>
+                    <button type="button" id="add-dir" class="btn-create-folder">创建文件夹</button>
+                </div>
+            </div>
+
+            <table id="file_table">
+                <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>大小</th>
+                        <th>上传时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- File rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Update file name display when file is selected
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : '点击或拖拽文件到此处上传';
+            document.getElementById('fileName').textContent = fileName;
+        });
+    </script>
+</body>
 </html>

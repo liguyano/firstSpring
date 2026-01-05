@@ -1,19 +1,21 @@
 package com.example.springtry2;
 
 import com.User.AccountSql;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("")
 public class UserDealer {
 private AccountSql accountSql;
+private JSONArray messages=new JSONArray();
 public UserDealer()
 {
     accountSql=new AccountSql();
@@ -37,6 +39,19 @@ public String register(@RequestParam("username") String username,@RequestParam("
 {
  accountSql.submit(username,password);
  return "OK";
+}
+@PostMapping("message")
+public String recvMessage(@RequestParam("id") String id,@RequestParam("message") String message)
+{
+    JSONObject jo=new JSONObject();
+    jo.put(id,message);
+    messages.add(jo);
+    return "1";
+}
+@GetMapping("message")
+public String getMessage()
+{
+    return messages.toString();
 }
 
 @PreDestroy

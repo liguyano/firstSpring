@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <script type="text/javascript" src="./script/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="./script/message.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .message-area {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 70%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.received {
+            background: #f0f0f0;
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message-sender {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .message.sent .message-sender {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .message-content {
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .input-area {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            max-height: 150px;
+        }
+
+        .message-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .send-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        .send-button svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 14px;
+        }
+
+        .typing-indicator {
+            display: none;
+            color: #999;
+            font-size: 12px;
+            padding: 10px;
+            font-style: italic;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 10px;
+            }
+
+            .message-area {
+                padding: 15px;
+                max-height: calc(100vh - 200px);
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .input-area {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-header">
+        <h1>💬 聊天室</h1>
+    </div>
+    <div class="chat-container">
+        <div class="message-area" id="messageArea">
+            <div class="empty-state">
+                暂无消息，开始聊天吧！
+            </div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">对方正在输入...</div>
+        <div class="input-area">
+            <textarea 
+                id="maintext" 
+                class="message-input" 
+                placeholder="输入消息..."
+                rows="1"
+            ></textarea>
+            <button class="send-button" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</body>
+</html>
